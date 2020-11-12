@@ -62,7 +62,7 @@ class _SearchPageState extends State<SearchPage>
   }
 
   displayNoSearchResultScreen() {
-    // final Orientation orientation = MediaQuery.of(context).orientation;
+    final Orientation orientation = MediaQuery.of(context).orientation;
     return Container(
       child: Center(
         child: ListView(
@@ -79,7 +79,7 @@ class _SearchPageState extends State<SearchPage>
               style: TextStyle(
                   color: Colors.black,
                   fontWeight: FontWeight.w500,
-                  fontSize: 40.0),
+                  fontSize: 35.0),
             )
           ],
         ),
@@ -131,9 +131,10 @@ class UserResult extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.all(3.0),
       child: Container(
-        color: Colors.black,
+        color: Colors.white,
         child: Column(
           children: [
+            Padding(padding: EdgeInsets.only(top: 3.0)),
             GestureDetector(
               onTap: () => print("tapped"),
               child: ListTile(
@@ -144,14 +145,14 @@ class UserResult extends StatelessWidget {
                 title: Text(
                   eachUser.profileName,
                   style: TextStyle(
-                    color: Colors.white,
+                    color: Colors.black,
                     fontSize: 16.0,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 subtitle: Text(
                   eachUser.username,
-                  style: TextStyle(color: Colors.white, fontSize: 13.0),
+                  style: TextStyle(color: Colors.black, fontSize: 13.0),
                 ),
               ),
             ),

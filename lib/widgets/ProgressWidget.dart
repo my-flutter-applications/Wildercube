@@ -11,9 +11,9 @@ circularProgress() {
 }
 
 linearProgress() {
-  Container(
+  return Container(
     alignment: Alignment.center,
-    padding: EdgeInsets.only(top: 12.0),
+    // padding: EdgeInsets.only(top: 12.0),
     child: LinearProgressIndicator(
       valueColor: AlwaysStoppedAnimation(Colors.orangeAccent),
     ),
