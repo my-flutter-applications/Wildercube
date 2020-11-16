@@ -115,11 +115,11 @@ class _HomePageState extends State<HomePage> {
       backgroundColor: Colors.white,
       body: PageView(
         children: [
-          // TimeLinePage(),
-          RaisedButton.icon(
-              onPressed: logoutUser,
-              icon: Icon(Icons.close),
-              label: Text('Sign Out')),
+          TimeLinePage(),
+          // RaisedButton.icon(
+          //     onPressed: logoutUser,
+          //     icon: Icon(Icons.close),
+          //     label: Text('Sign Out')),
           SearchPage(),
           UploadPage(
             gCurrentUser: currentUser,
