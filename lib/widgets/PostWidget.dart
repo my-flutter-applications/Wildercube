@@ -1,5 +1,7 @@
 // import 'dart:html';
 
+import 'dart:async';
+
 import 'package:buddiesgram/models/user.dart';
 import 'package:buddiesgram/pages/HomePage.dart';
 import 'package:buddiesgram/widgets/CImageWidget.dart';
@@ -92,6 +94,7 @@ class _PostState extends State<Post> {
 
   @override
   Widget build(BuildContext context) {
+    isLiked = (likes[currentOnlineUserId] == true);
     return Padding(
       padding: EdgeInsets.only(bottom: 12.0),
       child: Column(
@@ -142,13 +145,94 @@ class _PostState extends State<Post> {
     );
   }
 
+  removeLike() {
+    //if post is already liked
+    bool isNotPostOwner = currentOnlineUserId != ownerId;
+    if (isNotPostOwner) {
+      activityFeedReference
+          .document(ownerId)
+          .collection('feedItems')
+          .document(postId)
+          .get()
+          .then((document) {
+        if (document.exists) {
+          document.reference.delete();
+        }
+      });
+    }
+  }
+
+  addLike() {
+    bool isNotPostOwner = currentOnlineUserId != ownerId;
+    if (isNotPostOwner) {
+      activityFeedReference
+          .document(ownerId)
+          .collection('feedItems')
+          .document(postId)
+          .setData({
+        'type': 'like',
+        'username': currentUser.username,
+        'userId': currentUser.id,
+        'timestamp': timestamp,
+        'url': url,
+        'postId': postId,
+        'userProfileImage': currentUser.url
+      });
+    }
+  }
+
+  controlUserLikePost() {
+    //if post is already liked
+    // - check if the post is liked, update the likes to false, remove like from firestore and setState to UI
+
+    bool _liked = likes[currentOnlineUserId] == true;
+    if (_liked) {
+      postsReference
+          .document(ownerId)
+          .collection('userPosts')
+          .document(postId)
+          .updateData({'likes.$currentOnlineUserId': false});
+      removeLike();
+      setState(() {
+        likeCount = likeCount - 1;
+        isLiked = false;
+        likes[currentOnlineUserId] = false;
+      });
+    } else if (!_liked) {
+      postsReference
+          .document(ownerId)
+          .collection('userPosts')
+          .document('postId')
+          .updateData({'likes.$currentOnlineUserId': true});
+      addLike();
+      setState(() {
+        likeCount = likeCount + 1;
+        isLiked = true;
+        likes[currentOnlineUserId] = true;
+        showHeart = true;
+      });
+      Timer(Duration(milliseconds: 800), () {
+        setState(() {
+          showHeart = false;
+        });
+      });
+    }
+  }
+
   createPostPicture() {
     return GestureDetector(
-      onDoubleTap: () => print('post liked'),
+      onDoubleTap: () => controlUserLikePost,
       child: Stack(
         alignment: Alignment.center,
         children: [
           Image.network(url),
+          showHeart
+              ? Icon(
+                  Icons.favorite,
+                  size: 140.0,
+                  color: Theme.of(context).accentColor,
+                )
+              : Text(''),
         ],
       ),
     );
@@ -162,11 +246,11 @@ class _PostState extends State<Post> {
           children: [
             Padding(padding: EdgeInsets.only(top: 40.0, left: 20.0)),
             GestureDetector(
-              onTap: () => print('liked post'),
+              onTap: () => controlUserLikePost(),
               child: Icon(
-                Icons.favorite, color: Colors.grey,
-                // isLiked ? Icons.favorite : Icons.favorite_border,
-                // color: Colors.white,
+                isLiked ? Icons.favorite : Icons.favorite_border,
+                color: Theme.of(context).accentColor,
+                size: 28.0,
               ),
             ),
             Padding(padding: EdgeInsets.only(top: 40.0, left: 20.0)),
@@ -174,6 +258,7 @@ class _PostState extends State<Post> {
               onTap: () => print('show comments'),
               child: Icon(
                 Icons.chat_bubble_outline,
+                size: 28.0,
                 color: Colors.black,
               ),
             ),
