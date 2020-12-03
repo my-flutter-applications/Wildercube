@@ -5,6 +5,7 @@ import 'dart:async';
 import 'package:buddiesgram/models/user.dart';
 import 'package:buddiesgram/pages/CommentsPage.dart';
 import 'package:buddiesgram/pages/HomePage.dart';
+import 'package:buddiesgram/pages/ProfilePage.dart';
 import 'package:buddiesgram/widgets/CImageWidget.dart';
 import 'package:buddiesgram/widgets/ProgressWidget.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -125,7 +126,7 @@ class _PostState extends State<Post> {
               backgroundImage: CachedNetworkImageProvider(user.url),
               backgroundColor: Colors.grey),
           title: GestureDetector(
-            onTap: () => print('show profile'),
+            onTap: () => displayUserProfile(context, userProfileId: user.id),
             child: Text(
               user.username,
               style:
@@ -144,6 +145,13 @@ class _PostState extends State<Post> {
         );
       },
     );
+  }
+
+  displayUserProfile(BuildContext context, {String userProfileId}) {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => ProfilePage(userProfileId: userProfileId)));
   }
 
   removeLike() {
@@ -174,10 +182,10 @@ class _PostState extends State<Post> {
         'type': 'like',
         'username': currentUser.username,
         'userId': currentUser.id,
-        'timestamp': timestamp,
+        'timestamp': DateTime.now(),
         'url': url,
         'postId': postId,
-        'userProfileImage': currentUser.url
+        'userProfileImg': currentUser.url
       });
     }
   }

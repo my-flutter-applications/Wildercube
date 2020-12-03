@@ -1,5 +1,6 @@
 import 'package:buddiesgram/models/user.dart';
 import 'package:buddiesgram/pages/HomePage.dart';
+import 'package:buddiesgram/pages/ProfilePage.dart';
 import 'package:buddiesgram/widgets/ProgressWidget.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -136,7 +137,8 @@ class UserResult extends StatelessWidget {
           children: [
             Padding(padding: EdgeInsets.only(top: 3.0)),
             GestureDetector(
-              onTap: () => print("tapped"),
+              onTap: () =>
+                  displayUserProfile(context, userProfileId: eachUser.id),
               child: ListTile(
                 leading: CircleAvatar(
                   backgroundColor: Colors.white,
@@ -158,6 +160,15 @@ class UserResult extends StatelessWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  displayUserProfile(BuildContext context, {String userProfileId}) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ProfilePage(userProfileId: userProfileId),
       ),
     );
   }
