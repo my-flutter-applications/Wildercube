@@ -52,7 +52,7 @@ class Post extends StatefulWidget {
     int counter = 0;
     likes.values.forEach((eachValue) {
       if (eachValue == true) {
-        counter++;
+        counter = counter + 1;
       }
     });
     return counter;
